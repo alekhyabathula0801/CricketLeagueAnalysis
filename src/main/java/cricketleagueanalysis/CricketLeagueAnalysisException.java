@@ -20,4 +20,5 @@ public class CricketLeagueAnalysisException extends Exception{
         super(message);
         this.type = ExceptionType.valueOf(name);
     }
+
 }

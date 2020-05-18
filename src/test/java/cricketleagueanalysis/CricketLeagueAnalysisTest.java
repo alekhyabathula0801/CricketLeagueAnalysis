@@ -1,5 +1,6 @@
 package cricketleagueanalysis;
 
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class CricketLeagueAnalysisTest {
     public void givenIPL2019BatsmanData_shouldReturnTotalNumberOfPlayers() {
         try{
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
-            int numOfRecords = cricketLeagueAnalysis.loadCricketLeagueData(IPL_BATSMAN_DATA);
+            int numOfRecords = cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA);
             Assert.assertEquals(100,numOfRecords);
         } catch (CricketLeagueAnalysisException e) {}
     }
@@ -25,7 +26,7 @@ public class CricketLeagueAnalysisTest {
     public void givenIPL2019BatsmanData_WithWrongPath_ShouldThrowException() {
         try {
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
-            cricketLeagueAnalysis.loadCricketLeagueData(IPL_BATSMAN_DATA_WRONG_PATH);
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA_WRONG_PATH);
         } catch (CricketLeagueAnalysisException e) {
             Assert.assertEquals(CricketLeagueAnalysisException.ExceptionType.IPL_FILE_PROBLEM,e.type);
         }
@@ -35,7 +36,7 @@ public class CricketLeagueAnalysisTest {
     public void givenIPL2019BatsmanData_WhenEmpty_ShouldThrowException() {
         try {
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
-            cricketLeagueAnalysis.loadCricketLeagueData(IPL_BATSMAN_DATA_EMPTY_FILE);
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA_EMPTY_FILE);
         } catch (CricketLeagueAnalysisException e) {
             Assert.assertEquals(CricketLeagueAnalysisException.ExceptionType.NO_DATA,e.type);
         }
@@ -45,7 +46,7 @@ public class CricketLeagueAnalysisTest {
     public void givenIPL2019BatsmanData_WithWrongType_ShouldThrowException() {
         try {
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
-            cricketLeagueAnalysis.loadCricketLeagueData(IPL_BATSMAN_DATA_WRONG_TYPE);
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA_WRONG_TYPE);
         } catch (CricketLeagueAnalysisException e) {
             Assert.assertEquals(CricketLeagueAnalysisException.ExceptionType.UNABLE_TO_PARSE,e.type);
         }
@@ -55,7 +56,7 @@ public class CricketLeagueAnalysisTest {
     public void givenIPL2019BatsmanData_WithWrongHeader_ShouldThrowException() {
         try {
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
-            cricketLeagueAnalysis.loadCricketLeagueData(IPL_BATSMAN_DATA_WRONG_HEADER);
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA_WRONG_HEADER);
         } catch (CricketLeagueAnalysisException e) {
             Assert.assertEquals(CricketLeagueAnalysisException.ExceptionType.UNABLE_TO_PARSE,e.type);
         }
@@ -65,10 +66,22 @@ public class CricketLeagueAnalysisTest {
     public void givenIPL2019BatsmanData_WithWrongDelimiter_ShouldThrowException() {
         try {
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
-            cricketLeagueAnalysis.loadCricketLeagueData(IPL_BATSMAN_DATA_WRONG_DELIMITER);
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA_WRONG_DELIMITER);
         } catch (CricketLeagueAnalysisException e) {
             Assert.assertEquals(CricketLeagueAnalysisException.ExceptionType.UNABLE_TO_PARSE,e.type);
         }
+    }
+
+    @Test
+    public void givenIPL2019BatsmanData_whenSortedAccordingToBattingAverage_shouldReturnSortedResults() {
+        try {
+            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysis.getSortedBatsmanDataAccordingToBattingAverage();
+            BatsmanDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanDataCsv[].class);
+            Assert.assertEquals("MS Dhoni", iplBatsmanData[0].player);
+            Assert.assertEquals("Harpreet Brar", iplBatsmanData[99].player);
+        } catch (CricketLeagueAnalysisException e) {}
     }
 
 }
