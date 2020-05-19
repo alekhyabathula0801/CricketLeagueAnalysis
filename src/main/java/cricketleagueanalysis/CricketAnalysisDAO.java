@@ -11,6 +11,7 @@ public class CricketAnalysisDAO {
     public double economy;
     public int fourWickets;
     public int fiveWickets;
+    public int wickets;
 
     public CricketAnalysisDAO() {
     }
@@ -31,12 +32,13 @@ public class CricketAnalysisDAO {
         this.average = bowlerDataCsv.bowlingAverage;
         this.strikeRate = bowlerDataCsv.bowlingStrikeRate;
         this.economy = bowlerDataCsv.economy;
+        this.wickets = bowlerDataCsv.wickets;
     }
 
     public Object getIPLDTO(CricketLeagueAnalysis.Cricket cricket) {
         if(cricket.equals(CricketLeagueAnalysis.Cricket.BATTING))
             return new BatsmanDataCsv(player,runs,average,strikeRate,four,six);
-        return new BowlerDataCsv(player,average,strikeRate,economy,fourWickets,fiveWickets);
+        return new BowlerDataCsv(player,average,strikeRate,economy,fourWickets,fiveWickets,wickets);
     }
 
 }
