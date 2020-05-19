@@ -42,7 +42,7 @@ public class CricketLeagueAnalysis {
         return this.getSortedCricketLeagueData(sortByStrikeWithSixsAndFour.reversed(),cricket);
     }
 
-    public String getSortedDataAccordingToBattingAverageWithStrikeRate(Cricket cricket) throws CricketLeagueAnalysisException {
+    public String getSortedDataAccordingToAverageWithStrikeRate(Cricket cricket) throws CricketLeagueAnalysisException {
         Comparator<CricketAnalysisDAO> sortByAverageWithStrike = sortByAverage.thenComparing(sortByStrike);
         return this.getSortedCricketLeagueData(sortByAverageWithStrike.reversed(),cricket);
     }
