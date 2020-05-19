@@ -15,9 +15,13 @@ public class CricketLeagueAnalysis {
         this.cricket = cricket;
     }
 
+    Comparator<CricketAnalysisDAO> sortByAverage = Comparator.comparing(iplData -> iplData.average);
+    Comparator<CricketAnalysisDAO> sortByStrike = Comparator.comparing(iplData -> iplData.strikeRate);
+    Comparator<CricketAnalysisDAO> sortBySixAndFour = Comparator.comparing(iplData -> (iplData.six*6 + iplData.four*4));
+
     public int loadBatsmanData(String csvFilePath) throws CricketLeagueAnalysisException {
-       iplAnalysisMap = new CricketLeagueDataLoader().getCricketLeagueData(BatsmanDataCsv.class,csvFilePath);
-       return iplAnalysisMap.size();
+        iplAnalysisMap = new CricketLeagueDataLoader().getCricketLeagueData(BatsmanDataCsv.class,csvFilePath);
+        return iplAnalysisMap.size();
     }
 
     public int loadBowlerData(String csvFilePath) throws CricketLeagueAnalysisException {
@@ -26,24 +30,25 @@ public class CricketLeagueAnalysis {
     }
 
     public String getSortedDataAccordingToAverage(Cricket cricket) throws CricketLeagueAnalysisException {
-        Comparator<CricketAnalysisDAO> censusComparator = Comparator.comparing(iplData -> iplData.average);
-        return this.getSortedCricketLeagueData(censusComparator.reversed(),cricket);
+        return this.getSortedCricketLeagueData(sortByAverage.reversed(),cricket);
     }
 
     public String getSortedDataAccordingToStrikingRate(Cricket cricket) throws CricketLeagueAnalysisException {
-        Comparator<CricketAnalysisDAO> censusComparator = Comparator.comparing(iplData -> iplData.strikeRate);
-        return this.getSortedCricketLeagueData(censusComparator.reversed(),cricket);
+        return this.getSortedCricketLeagueData(sortByStrike.reversed(),cricket);
     }
 
     public String getSortedDataAccordingToSixsAndFours(Cricket cricket) throws CricketLeagueAnalysisException {
-        Comparator<CricketAnalysisDAO> censusComparator = Comparator.comparing(iplData -> (iplData.six*6 + iplData.four*4));
-        return this.getSortedCricketLeagueData(censusComparator.reversed(),cricket);
+        return this.getSortedCricketLeagueData(sortBySixAndFour.reversed(),cricket);
     }
 
     public String getSortedDataAccordingToStrikeRateWithSixsAndFours(Cricket cricket) throws CricketLeagueAnalysisException {
-        Comparator<CricketAnalysisDAO> sortByStrikeRate = Comparator.comparing(iplData -> (iplData.six*6 + iplData.four*4));
-        Comparator<CricketAnalysisDAO> sortByStrikeWithSixsAndFour = sortByStrikeRate.thenComparing(iplData -> iplData.strikeRate);
+        Comparator<CricketAnalysisDAO> sortByStrikeWithSixsAndFour = sortBySixAndFour.thenComparing(sortByStrike);
         return this.getSortedCricketLeagueData(sortByStrikeWithSixsAndFour.reversed(),cricket);
+    }
+
+    public String getSortedDataAccordingToBattingAverageWithStrikeRate(Cricket cricket) throws CricketLeagueAnalysisException {
+        Comparator<CricketAnalysisDAO> sortByAverageWithStrike = sortByAverage.thenComparing(sortByStrike);
+        return this.getSortedCricketLeagueData(sortByAverageWithStrike.reversed(),cricket);
     }
 
     private String getSortedCricketLeagueData(Comparator<CricketAnalysisDAO> censusComparator, Cricket cricket) throws CricketLeagueAnalysisException {
