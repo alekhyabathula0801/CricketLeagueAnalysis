@@ -17,14 +17,21 @@ public class CricketLeagueDataLoader {
 
     Map<String, CricketAnalysisDAO> iplAnalysisMap = new HashMap<>();
 
-    public Map<String,CricketAnalysisDAO> getCricketLeagueData(String csvFilePath) throws CricketLeagueAnalysisException {
+    public <E> Map<String,CricketAnalysisDAO> getCricketLeagueData(Class<E> iplDataCsvClass, String csvFilePath) throws CricketLeagueAnalysisException {
         try ( Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<BatsmanDataCsv> csvFileIterator = csvBuilder.getCSVFileIterator(reader, BatsmanDataCsv.class);
-            Iterable<BatsmanDataCsv> csvIterable = () -> csvFileIterator;
-            StreamSupport.stream(csvIterable.spliterator(),false).
-                          forEach(iplDataCsv -> iplAnalysisMap.put(iplDataCsv.player,new CricketAnalysisDAO(iplDataCsv)));
+            Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, iplDataCsvClass);
+            Iterable<E> csvIterable = () -> csvFileIterator;
+            if(iplDataCsvClass.getName().equals("cricketleagueanalysis.BatsmanDataCsv")) {
+                StreamSupport.stream(csvIterable.spliterator(), false).
+                        map(BatsmanDataCsv.class::cast).
+                        forEach(iplDataCsv -> iplAnalysisMap.put(iplDataCsv.player, new CricketAnalysisDAO(iplDataCsv)));
+            } else if(iplDataCsvClass.getName().equals("cricketleagueanalysis.BowlerDataCsv")) {
+                StreamSupport.stream(csvIterable.spliterator(), false).
+                        map(BowlerDataCsv.class::cast).
+                        forEach(iplDataCsv -> iplAnalysisMap.put(iplDataCsv.player, new CricketAnalysisDAO(iplDataCsv)));
+            }
             if(iplAnalysisMap.size() == 0)
                 throw new CricketLeagueAnalysisException("NO_DATA",
                             CricketLeagueAnalysisException.ExceptionType.NO_DATA);
