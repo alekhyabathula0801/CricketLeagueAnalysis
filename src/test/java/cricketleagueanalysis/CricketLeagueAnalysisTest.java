@@ -146,6 +146,18 @@ public class CricketLeagueAnalysisTest {
     }
 
     @Test
+    public void givenIPL2019BatsmanData_whenSortedAccordingToStrikeRateWithSixsAndFours_shouldReturnSortedResults() {
+        try {
+            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING);
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysis.getSortedDataAccordingToStrikeRateWithSixsAndFours(CricketLeagueAnalysis.Cricket.BATTING);
+            BatsmanDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanDataCsv[].class);
+            Assert.assertEquals("Andre Russell", iplBatsmanData[0].player);
+            Assert.assertEquals("Shakib Al Hasan", iplBatsmanData[99].player);
+        } catch (CricketLeagueAnalysisException e) {}
+    }
+
+    @Test
     public void givenIPL2019BowlerData_shouldReturnTotalNumberOfPlayers() {
         try{
             CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING);

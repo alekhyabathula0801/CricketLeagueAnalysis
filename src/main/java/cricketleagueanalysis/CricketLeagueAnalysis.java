@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class CricketLeagueAnalysis {
 
     Map<String,CricketAnalysisDAO> iplAnalysisMap = null;
+
     enum Cricket { BATTING,BOWLING}
     private Cricket cricket;
 
@@ -37,6 +38,12 @@ public class CricketLeagueAnalysis {
     public String getSortedDataAccordingToSixsAndFours(Cricket cricket) throws CricketLeagueAnalysisException {
         Comparator<CricketAnalysisDAO> censusComparator = Comparator.comparing(iplData -> (iplData.six*6 + iplData.four*4));
         return this.getSortedCricketLeagueData(censusComparator.reversed(),cricket);
+    }
+
+    public String getSortedDataAccordingToStrikeRateWithSixsAndFours(Cricket cricket) throws CricketLeagueAnalysisException {
+        Comparator<CricketAnalysisDAO> sortByStrikeRate = Comparator.comparing(iplData -> (iplData.six*6 + iplData.four*4));
+        Comparator<CricketAnalysisDAO> sortByStrikeWithSixsAndFour = sortByStrikeRate.thenComparing(iplData -> iplData.strikeRate);
+        return this.getSortedCricketLeagueData(sortByStrikeWithSixsAndFour.reversed(),cricket);
     }
 
     private String getSortedCricketLeagueData(Comparator<CricketAnalysisDAO> censusComparator, Cricket cricket) throws CricketLeagueAnalysisException {
