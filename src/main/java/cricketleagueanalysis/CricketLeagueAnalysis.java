@@ -20,13 +20,8 @@ public class CricketLeagueAnalysis {
     Comparator<CricketAnalysisDAO> sortBySixAndFour = Comparator.comparing(iplData -> (iplData.six*6 + iplData.four*4));
     Comparator<CricketAnalysisDAO> sortByRuns = Comparator.comparing(iplData -> iplData.runs);
 
-    public int loadBatsmanData(String csvFilePath) throws CricketLeagueAnalysisException {
-        iplAnalysisMap = new CricketLeagueDataLoader().getCricketLeagueData(BatsmanDataCsv.class,csvFilePath);
-        return iplAnalysisMap.size();
-    }
-
-    public int loadBowlerData(String csvFilePath) throws CricketLeagueAnalysisException {
-        iplAnalysisMap = new CricketLeagueDataLoader().getCricketLeagueData(BowlerDataCsv.class, csvFilePath);
+    public int loadIPLData(String csvFilePath) throws CricketLeagueAnalysisException {
+        iplAnalysisMap = new CricketLeagueDataAdapterFactory().getCricketLeagueData(cricket,csvFilePath);
         return iplAnalysisMap.size();
     }
 
@@ -56,7 +51,6 @@ public class CricketLeagueAnalysis {
         Comparator<CricketAnalysisDAO> sortByRunsWithAverage = sortByRuns.thenComparing(sortByAverage);
         return this.getSortedCricketLeagueData(sortByRunsWithAverage.reversed(),cricket);
     }
-
 
     private String getSortedCricketLeagueData(Comparator<CricketAnalysisDAO> censusComparator, Cricket cricket) throws CricketLeagueAnalysisException {
         if(iplAnalysisMap == null || iplAnalysisMap.size() == 0 ) {
