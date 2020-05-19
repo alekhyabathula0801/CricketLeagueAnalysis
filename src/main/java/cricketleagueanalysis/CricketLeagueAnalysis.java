@@ -35,6 +35,7 @@ public class CricketLeagueAnalysis {
         }
         List sortedBatsmanData = iplAnalysisMap.values().stream().
                                                          sorted(censusComparator).
+                                                         map(iplDAO -> iplDAO.getIPLDTO()).
                                                          collect(Collectors.toList());
         String sortedBatsmanDataInJson = new Gson().toJson(sortedBatsmanData);
         return sortedBatsmanDataInJson;

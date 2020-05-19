@@ -115,8 +115,32 @@ public class CricketLeagueAnalysisTest {
             cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA);
             String sortedBatsmanData = cricketLeagueAnalysis.getSortedBatsmanDataAccordingToSixsAndFours();
             BatsmanDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanDataCsv[].class);
-            Assert.assertEquals(204.81, iplBatsmanData[0].strikeRate,0.001);
-            Assert.assertEquals(90.0, iplBatsmanData[99].strikeRate,0.001);
+            Assert.assertEquals(204.81, iplBatsmanData[0].battingStrikeRate,0.001);
+            Assert.assertEquals(90.0, iplBatsmanData[99].battingStrikeRate,0.001);
+        } catch (CricketLeagueAnalysisException e) {}
+    }
+
+    @Test
+    public void givenIPL2019BatsmanData_whenSortedAccordingToStrikeRate_shouldReturnBattingAverage() {
+        try {
+            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysis.getSortedBatsmanDataAccordingToStrikingRate();
+            BatsmanDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanDataCsv[].class);
+            Assert.assertEquals(0.0, iplBatsmanData[0].battingAverage,0.001);
+            Assert.assertEquals(4.0, iplBatsmanData[99].battingAverage,0.001);
+        } catch (CricketLeagueAnalysisException e) {}
+    }
+
+    @Test
+    public void givenIPL2019BatsmanData_whenSortedAccordingToBattingAverage_shouldReturnTotalNumberOfRunsOfPlayer() {
+        try {
+            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis();
+            cricketLeagueAnalysis.loadBatsmanData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysis.getSortedBatsmanDataAccordingToBattingAverage();
+            BatsmanDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanDataCsv[].class);
+            Assert.assertEquals(416, iplBatsmanData[0].runs);
+            Assert.assertEquals(20, iplBatsmanData[99].runs);
         } catch (CricketLeagueAnalysisException e) {}
     }
 
