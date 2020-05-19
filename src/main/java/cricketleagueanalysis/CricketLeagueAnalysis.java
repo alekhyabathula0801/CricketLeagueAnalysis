@@ -57,6 +57,13 @@ public class CricketLeagueAnalysis {
         return this.getSortedCricketLeagueData(sortByEconomy.reversed(),cricket);
     }
 
+
+    public String getSortedDataAccordingToStrikeRateWith5WicketsAnd4Wickets(Cricket cricket) throws CricketLeagueAnalysisException {
+        Comparator<CricketAnalysisDAO> sortByFiveAndFourWickets = Comparator.comparing(iplData -> (iplData.fiveWickets*5 + iplData.fourWickets*4));
+        Comparator<CricketAnalysisDAO> sortByStrikeWithFiveAndFourWickets = sortByFiveAndFourWickets.thenComparing(sortByStrike);
+        return this.getSortedCricketLeagueData(sortByStrikeWithFiveAndFourWickets.reversed(),cricket);
+    }
+
     private String getSortedCricketLeagueData(Comparator<CricketAnalysisDAO> censusComparator, Cricket cricket) throws CricketLeagueAnalysisException {
         if(iplAnalysisMap == null || iplAnalysisMap.size() == 0 ) {
             throw new CricketLeagueAnalysisException("No Data",
