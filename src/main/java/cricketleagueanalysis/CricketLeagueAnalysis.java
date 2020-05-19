@@ -52,6 +52,11 @@ public class CricketLeagueAnalysis {
         return this.getSortedCricketLeagueData(sortByRunsWithAverage.reversed(),cricket);
     }
 
+    public String getSortedDataAccordingToEconomy(Cricket cricket) throws CricketLeagueAnalysisException {
+        Comparator<CricketAnalysisDAO> sortByEconomy = Comparator.comparing(iplData -> iplData.economy);
+        return this.getSortedCricketLeagueData(sortByEconomy.reversed(),cricket);
+    }
+
     private String getSortedCricketLeagueData(Comparator<CricketAnalysisDAO> censusComparator, Cricket cricket) throws CricketLeagueAnalysisException {
         if(iplAnalysisMap == null || iplAnalysisMap.size() == 0 ) {
             throw new CricketLeagueAnalysisException("No Data",

@@ -198,7 +198,33 @@ public class CricketLeagueAnalysisTest {
             String sortedBatsmanData = cricketLeagueAnalysis.getSortedDataAccordingToAverage(CricketLeagueAnalysis.Cricket.BOWLING);
             BowlerDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BowlerDataCsv[].class);
             Assert.assertEquals("Krishnappa Gowtham", iplBatsmanData[0].player);
+            Assert.assertEquals("Tim Southee", iplBatsmanData[1].player);
             Assert.assertEquals("Yusuf Pathan", iplBatsmanData[98].player);
+        } catch (CricketLeagueAnalysisException e) {}
+    }
+
+    @Test
+    public void givenIPL2019BowlersData_whenSortedAccordingToStrikeRate_shouldReturnSortedResults() {
+        try {
+            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING);
+            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysis.getSortedDataAccordingToStrikingRate(CricketLeagueAnalysis.Cricket.BOWLING);
+            BowlerDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BowlerDataCsv[].class);
+            Assert.assertEquals("Krishnappa Gowtham", iplBatsmanData[0].player);
+            Assert.assertEquals("Prasidh Krishna", iplBatsmanData[1].player);
+            Assert.assertEquals("Yusuf Pathan", iplBatsmanData[98].player);
+        } catch (CricketLeagueAnalysisException e) {}
+    }
+
+    @Test
+    public void givenIPL2019BowlersData_whenSortedAccordingToEconomy_shouldReturnSortedResults() {
+        try {
+            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING);
+            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysis.getSortedDataAccordingToEconomy(CricketLeagueAnalysis.Cricket.BOWLING);
+            BowlerDataCsv[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BowlerDataCsv[].class);
+            Assert.assertEquals("Ben Cutting", iplBatsmanData[0].player);
+            Assert.assertEquals("Shivam Dube", iplBatsmanData[98].player);
         } catch (CricketLeagueAnalysisException e) {}
     }
 
