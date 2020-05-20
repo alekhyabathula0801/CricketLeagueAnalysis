@@ -39,7 +39,7 @@ public class CricketAnalysisDAO {
             return new BatsmanData(player,runs, battingAverage, battingStrikeRate,four,six);
         else if(cricket.equals(CricketLeagueAnalysis.Cricket.BOWLING))
             return new BowlerData(player, bowlerAverage, bowlerStrikeRate,economy,fourWickets,fiveWickets,wickets);
-        return new BatsmanAndBowlerData(player,runs,battingAverage,battingStrikeRate,four,six,bowlerAverage);
+        return new BatsmanAndBowlerData(player,runs,battingAverage,battingStrikeRate,four,six,bowlerAverage,wickets);
     }
 
 }
