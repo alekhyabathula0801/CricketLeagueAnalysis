@@ -2,7 +2,7 @@ package cricketleagueanalysis;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class BatsmanDataCsv {
+public class BatsmanData {
 
     @CsvBindByName(column = "PLAYER", required = true)
     public String player;
@@ -22,27 +22,15 @@ public class BatsmanDataCsv {
     @CsvBindByName(column = "SR", required = true)
     public double battingStrikeRate;
 
-    public BatsmanDataCsv() { }
+    public BatsmanData() { }
 
-    public BatsmanDataCsv(String player, int runs, double battingAverage, double battingStrikeRate, int four, int six) {
+    public BatsmanData(String player, int runs, double battingAverage, double battingStrikeRate, int four, int six) {
         this.player = player;
         this.battingAverage = battingAverage;
         this.battingStrikeRate = battingStrikeRate;
         this.runs = runs;
         this.four = four;
         this.six = six;
-    }
-
-    @Override
-    public String toString() {
-        return "IPLRunsDataCsv{" +
-                "player='" + player + '\'' +
-                ", four=" + four +
-                ", six=" + six +
-                ", runs=" + runs +
-                ", average=" + battingAverage +
-                ", strikeRate=" + battingStrikeRate +
-                '}';
     }
 
 }

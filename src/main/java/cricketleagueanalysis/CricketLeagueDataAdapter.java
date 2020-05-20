@@ -15,28 +15,30 @@ import java.util.stream.StreamSupport;
 
 public abstract class CricketLeagueDataAdapter {
 
-    public abstract Map<String, CricketAnalysisDAO> loadIPLData(String csvFilePath) throws CricketLeagueAnalysisException;
-    Map<String, CricketAnalysisDAO> iplAnalysisMap = new HashMap<>();
+    public abstract Map<String, CricketAnalysisDAO> loadIPLData(String... csvFilePath) throws CricketLeagueAnalysisException;
 
-    public <E> Map<String,CricketAnalysisDAO> getCricketLeagueData(Class<E> iplDataCsvClass, String csvFilePath) throws CricketLeagueAnalysisException {
-        try ( Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
+    Map<String, CricketAnalysisDAO> cricketLeagueData = null;
+
+    public <E> Map<String,CricketAnalysisDAO> getCricketLeagueData(Class<E> iplDataClass, String... csvFilePath) throws CricketLeagueAnalysisException {
+        cricketLeagueData = new HashMap<>();
+        try ( Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0])))
         {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, iplDataCsvClass);
+            Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, iplDataClass);
             Iterable<E> csvIterable = () -> csvFileIterator;
-            if(iplDataCsvClass.getName().equals("cricketleagueanalysis.BatsmanDataCsv")) {
-                StreamSupport.stream(csvIterable.spliterator(), false).
-                        map(BatsmanDataCsv.class::cast).
-                        forEach(iplDataCsv -> iplAnalysisMap.put(iplDataCsv.player, new CricketAnalysisDAO(iplDataCsv)));
-            } else if(iplDataCsvClass.getName().equals("cricketleagueanalysis.BowlerDataCsv")) {
-                StreamSupport.stream(csvIterable.spliterator(), false).
-                        map(BowlerDataCsv.class::cast).
-                        forEach(iplDataCsv -> iplAnalysisMap.put(iplDataCsv.player, new CricketAnalysisDAO(iplDataCsv)));
+            if(iplDataClass.getName().equals("cricketleagueanalysis.BatsmanData")) {
+                StreamSupport.stream(csvIterable.spliterator(), false)
+                             .map(BatsmanData.class::cast)
+                             .forEach(iplDataCsv -> cricketLeagueData.put(iplDataCsv.player, new CricketAnalysisDAO(iplDataCsv)));
+            } else if(iplDataClass.getName().equals("cricketleagueanalysis.BowlerData")) {
+                StreamSupport.stream(csvIterable.spliterator(), false)
+                             .map(BowlerData.class::cast)
+                             .forEach(iplDataCsv -> cricketLeagueData.put(iplDataCsv.player, new CricketAnalysisDAO(iplDataCsv)));
             }
-            if(iplAnalysisMap.size() == 0)
+            if(cricketLeagueData.size() == 0)
                 throw new CricketLeagueAnalysisException("NO_DATA",
                             CricketLeagueAnalysisException.ExceptionType.NO_DATA);
-            return this.iplAnalysisMap;
+            return this.cricketLeagueData;
         } catch (IOException e) {
             throw new CricketLeagueAnalysisException(e.getMessage(),
                         CricketLeagueAnalysisException.ExceptionType.IPL_FILE_PROBLEM);
