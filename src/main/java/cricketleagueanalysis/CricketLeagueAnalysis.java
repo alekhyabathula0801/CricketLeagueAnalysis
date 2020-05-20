@@ -104,10 +104,10 @@ public class CricketLeagueAnalysis {
             throw new CricketLeagueAnalysisException("No Data",
                         CricketLeagueAnalysisException.ExceptionType.NO_DATA);
         }
-        List sortedCricketLeagueData = cricketLeagueData.values().stream().
-                                                         sorted(iplDataComparator).
-                                                         map(iplDAO -> iplDAO.getIPLDTO(cricket)).
-                                                         collect(Collectors.toList());
+        List sortedCricketLeagueData = cricketLeagueData.values().stream()
+                                                         .sorted(iplDataComparator)
+                                                         .map(iplDAO -> iplDAO.getIPLDTO(cricket))
+                                                         .collect(Collectors.toList());
         String sortedCricketLeagueDataInJson = new Gson().toJson(sortedCricketLeagueData);
         return sortedCricketLeagueDataInJson;
     }
