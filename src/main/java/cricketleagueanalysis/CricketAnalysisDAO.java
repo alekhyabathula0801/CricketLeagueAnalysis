@@ -6,9 +6,9 @@ public class CricketAnalysisDAO {
     public int four;
     public int six;
     public int runs;
-    public double battingAverage;
+    public double batsmanAverage;
     public double bowlerAverage;
-    public double battingStrikeRate;
+    public double batsmanStrikeRate;
     public double bowlerStrikeRate;
     public double economy;
     public int fourWickets;
@@ -20,8 +20,8 @@ public class CricketAnalysisDAO {
         this.four = batsmanData.four;
         this.six = batsmanData.six;
         this.runs = batsmanData.runs;
-        this.battingAverage = batsmanData.battingAverage;
-        this.battingStrikeRate = batsmanData.battingStrikeRate;
+        this.batsmanAverage = batsmanData.batsmanAverage;
+        this.batsmanStrikeRate = batsmanData.batsmanStrikeRate;
     }
 
     public CricketAnalysisDAO(BowlerData bowlerData) {
@@ -36,10 +36,10 @@ public class CricketAnalysisDAO {
 
     public Object getIPLDTO(CricketLeagueAnalysis.Cricket cricket) {
         if(cricket.equals(CricketLeagueAnalysis.Cricket.BATTING))
-            return new BatsmanData(player,runs, battingAverage, battingStrikeRate,four,six);
-        else if(cricket.equals(CricketLeagueAnalysis.Cricket.BOWLING))
+            return new BatsmanData(player,runs, batsmanAverage, batsmanStrikeRate,four,six);
+        if(cricket.equals(CricketLeagueAnalysis.Cricket.BOWLING))
             return new BowlerData(player, bowlerAverage, bowlerStrikeRate,economy,fourWickets,fiveWickets,wickets);
-        return new BatsmanAndBowlerData(player,runs,battingAverage,battingStrikeRate,four,six,bowlerAverage,wickets);
+        return new BatsmanAndBowlerData(player,runs, batsmanAverage, batsmanStrikeRate,four,six,bowlerAverage,wickets);
     }
 
 }
