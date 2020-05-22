@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class IPLComparator {
 
-    Map<CricketLeagueAnalysis.CompareType, Comparator<CricketAnalysisDAO>> iplComparator = new HashMap<>();
+    static Map<CricketLeagueAnalysis.CompareType, Comparator<CricketAnalysisDAO>> iplComparator = new HashMap<>();
 
-    private void loadIPLComparators() {
+    static  {
         Comparator<CricketAnalysisDAO> compareByBattingStrike = Comparator.comparing(iplData -> iplData.batsmanStrikeRate);
         iplComparator.put(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE,compareByBattingStrike);
         Comparator<CricketAnalysisDAO> compareByBattingAverage = Comparator.comparing(iplData -> iplData.batsmanAverage);
@@ -46,7 +46,6 @@ public class IPLComparator {
     }
 
     public Comparator<CricketAnalysisDAO> getIPLDataComparator(CricketLeagueAnalysis.CompareType compareType) {
-        loadIPLComparators();
         return iplComparator.get(compareType);
     }
 
