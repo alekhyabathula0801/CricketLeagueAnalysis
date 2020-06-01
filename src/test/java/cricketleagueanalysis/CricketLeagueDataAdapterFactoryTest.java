@@ -98,4 +98,19 @@ public class CricketLeagueDataAdapterFactoryTest {
         }
     }
 
+    @Test
+    public void givenBatsmanAndBowlerData_shouldReturnData() {
+        try{
+            Map<String,CricketAnalysisDAO> cricketData = cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
+            double bowlersAverage = cricketData.get("Hardik Pandya").bowlerAverage;
+            int wicket = cricketData.get("Hardik Pandya").wickets;
+            int runs = cricketData.get("Hardik Pandya").runs;
+            Assert.assertEquals(27.85,bowlersAverage,0.0);
+            Assert.assertEquals(14, wicket);
+            Assert.assertEquals(402, runs);
+        } catch (CricketLeagueAnalysisException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
