@@ -16,20 +16,21 @@ public class CricketLeagueAnalysis {
 
     enum Cricket {BATTING,BOWLING,BATTING_BOWLING}
     private Cricket cricket;
+    private CricketLeagueDataAdapterFactory cricketLeagueDataAdapterFactory;
 
-    public CricketLeagueAnalysis(Cricket cricket) {
+    public CricketLeagueAnalysis(Cricket cricket, CricketLeagueDataAdapterFactory cricketLeagueDataAdapterFactory) {
         this.cricket = cricket;
+        this.cricketLeagueDataAdapterFactory = cricketLeagueDataAdapterFactory;
     }
 
     public int loadIPLData(String... csvFilePath) throws CricketLeagueAnalysisException {
-        cricketLeagueData = new CricketLeagueDataAdapterFactory().getCricketLeagueData(cricket,csvFilePath);
+        cricketLeagueData = cricketLeagueDataAdapterFactory.getCricketLeagueData(cricket,csvFilePath);
         return cricketLeagueData.size();
     }
 
     public String getSortedData(CompareType compareType) throws CricketLeagueAnalysisException {
-        if (cricketLeagueData == null || cricketLeagueData.size() == 0) {
+        if (cricketLeagueData == null || cricketLeagueData.size() == 0)
             throw new CricketLeagueAnalysisException("No Data", CricketLeagueAnalysisException.ExceptionType.NO_DATA);
-        }
         Comparator<CricketAnalysisDAO> iplComparator = new IPLComparator().getIPLDataComparator(compareType);
         List sortedCricketLeagueData = cricketLeagueData.values().stream()
                                                                  .sorted(iplComparator.reversed())

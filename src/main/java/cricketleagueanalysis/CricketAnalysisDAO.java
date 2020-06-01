@@ -34,6 +34,17 @@ public class CricketAnalysisDAO {
         this.wickets = bowlerData.wickets;
     }
 
+    public CricketAnalysisDAO(BatsmanAndBowlerData batsmanAndBowlerData) {
+        this.player = batsmanAndBowlerData.player;
+        this.batsmanAverage = batsmanAndBowlerData.batsmanAverage;
+        this.batsmanStrikeRate = batsmanAndBowlerData.batsmanStrikeRate;
+        this.runs = batsmanAndBowlerData.runs;
+        this.four = batsmanAndBowlerData.four;
+        this.six = batsmanAndBowlerData.six;
+        this.bowlerAverage = batsmanAndBowlerData.bowlerAverage;
+        this.wickets = batsmanAndBowlerData.wickets;
+    }
+
     public Object getIPLDTO(CricketLeagueAnalysis.Cricket cricket) {
         if(cricket.equals(CricketLeagueAnalysis.Cricket.BATTING))
             return new BatsmanData(player,runs, batsmanAverage, batsmanStrikeRate,four,six);
