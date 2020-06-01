@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -26,6 +27,15 @@ public class CricketLeagueAnalysisTest {
 
     @Rule
     public MockitoRule mockitoRule = new MockitoJUnit().rule();
+
+    @InjectMocks
+    CricketLeagueAnalysis cricketLeagueAnalysisForBatting;
+
+    @InjectMocks
+    CricketLeagueAnalysis cricketLeagueAnalysisForBowling;
+
+    @InjectMocks
+    CricketLeagueAnalysis cricketLeagueAnalysisForBattingAndBowling;
 
     Map<String, CricketAnalysisDAO> batsmanData;
     Map<String, CricketAnalysisDAO> bowlerData;
@@ -52,23 +62,25 @@ public class CricketLeagueAnalysisTest {
         batsmanAndBowlerData.put("Harpreet Brar",new CricketAnalysisDAO(new BatsmanAndBowlerData("Harpreet Brar", 20, 0,  166.66, 2, 2,0,0)));
         batsmanAndBowlerData.put("Tim Southee",new CricketAnalysisDAO(new BatsmanAndBowlerData("Tim Southee", 9, 0,  100.00, 2, 1,0,0)));
         batsmanAndBowlerData.put("Hardik Pandya",new CricketAnalysisDAO(new BatsmanAndBowlerData("Hardik Pandya", 402, 44.66,  191.42, 28, 29,27.85,14)));
+
+        cricketLeagueAnalysisForBatting.setCricket(CricketLeagueAnalysis.Cricket.BATTING);
+        cricketLeagueAnalysisForBattingAndBowling.setCricket(CricketLeagueAnalysis.Cricket.BATTING_BOWLING);
+        cricketLeagueAnalysisForBowling.setCricket(CricketLeagueAnalysis.Cricket.BOWLING);
     }
 
     @Test
     public void givenBatsmanData_whenLoaded_ShouldReturnSize() throws CricketLeagueAnalysisException {
-        CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
         when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-        int cricketLeagueData = cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
+        int cricketLeagueData = cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
         Assert.assertEquals(6, cricketLeagueData);
     }
 
     @Test
     public void givenBatsmanData_whenSortedAccordingToBattingAverage_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals("MS Dhoni", iplBatsmanData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -77,10 +89,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToStrikeRate_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals("Ishant Sharma", iplBatsmanData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -89,10 +100,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToSixsAndFours_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.SIX_AND_FOUR);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.SIX_AND_FOUR);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals("Andre Russell", iplBatsmanData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -101,10 +111,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToSixsAndFours_shouldReturnSrikeRate() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING, cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.SIX_AND_FOUR);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.SIX_AND_FOUR);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals(204.81, iplBatsmanData[0].batsmanStrikeRate,0.001);
         } catch (CricketLeagueAnalysisException e) {}
@@ -113,10 +122,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToStrikeRate_shouldReturnBattingAverage() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals(0.0, iplBatsmanData[0].batsmanAverage,0.001);
         } catch (CricketLeagueAnalysisException e) {}
@@ -125,10 +133,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToBattingAverage_shouldReturnTotalNumberOfRunsOfPlayer() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals(416, iplBatsmanData[0].runs);
         } catch (CricketLeagueAnalysisException e) {}
@@ -137,10 +144,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToStrikeRateWithSixsAndFours_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE_WITH_SIX_AND_FOUR);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_STRIKE_WITH_SIX_AND_FOUR);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals("Andre Russell", iplBatsmanData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -149,10 +155,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToBattingAverageWithStrikeRate_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE_WITH_STRIKE);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE_WITH_STRIKE);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals("MS Dhoni", iplBatsmanData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -161,10 +166,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_whenSortedAccordingToRunsWithBattingAverage_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING,IPL_BATSMAN_DATA)).thenReturn(batsmanData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA);
-            String sortedBatsmanData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_RUNS_WITH_AVERAGE);
+            cricketLeagueAnalysisForBatting.loadIPLData(IPL_BATSMAN_DATA);
+            String sortedBatsmanData = cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_RUNS_WITH_AVERAGE);
             BatsmanData[] iplBatsmanData = new Gson().fromJson(sortedBatsmanData, BatsmanData[].class);
             Assert.assertEquals("David Warner ", iplBatsmanData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -172,9 +176,8 @@ public class CricketLeagueAnalysisTest {
 
     @Test
     public void givenBowlersData_WhenCorrect_ShouldReturnSize() throws CricketLeagueAnalysisException {
-        CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
         when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-        int cricketLeagueData = cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
+        int cricketLeagueData = cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
         Assert.assertEquals(5, cricketLeagueData);
     }
 
@@ -182,10 +185,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersData_whenSortedAccordingToBowlingAverage_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
-            String sortedBowlersData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_AVERAGE);
+            cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBowlersData = cricketLeagueAnalysisForBowling.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_AVERAGE);
             BowlerData[] iplBowlersData = new Gson().fromJson(sortedBowlersData, BowlerData[].class);
             Assert.assertEquals("Krishnappa Gowtham", iplBowlersData[0].player);
             Assert.assertEquals("Yusuf Pathan", iplBowlersData[bowlerData.size()-1].player);
@@ -195,10 +197,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersData_whenSortedAccordingToStrikeRate_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
-            String sortedBowlersData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_STRIKE);
+            cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBowlersData = cricketLeagueAnalysisForBowling.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_STRIKE);
             BowlerData[] iplBowlersData = new Gson().fromJson(sortedBowlersData, BowlerData[].class);
             Assert.assertEquals("Krishnappa Gowtham", iplBowlersData[0].player);
             Assert.assertEquals("Yusuf Pathan", iplBowlersData[bowlerData.size()-1].player);
@@ -208,10 +209,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersData_whenSortedAccordingToEconomy_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
-            String sortedBowlersData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.ECONOMY);
+            cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBowlersData = cricketLeagueAnalysisForBowling.getSortedData(CricketLeagueAnalysis.CompareType.ECONOMY);
             BowlerData[] iplBowlersData = new Gson().fromJson(sortedBowlersData, BowlerData[].class);
             Assert.assertEquals("Ben Cutting", iplBowlersData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -220,10 +220,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersData_whenSortedAccordingToStringRateWithFiveWicketsAndFourWicket_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
-            String sortedBowlersData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_STRIKE_WITH_FOUR_AND_FIVE_WICKETS);
+            cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBowlersData = cricketLeagueAnalysisForBowling.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_STRIKE_WITH_FOUR_AND_FIVE_WICKETS);
             BowlerData[] iplBowlersData = new Gson().fromJson(sortedBowlersData, BowlerData[].class);
             Assert.assertEquals("Lasith Malinga", iplBowlersData[0].player);
             Assert.assertEquals("Yusuf Pathan", iplBowlersData[bowlerData.size()-1].player);
@@ -233,10 +232,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersData_whenSortedAccordingToBowlingAverageWithBowlingStrikingRate_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
-            String sortedBowlersData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_AVERAGE_WITH_STRIKE);
+            cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBowlersData = cricketLeagueAnalysisForBowling.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_AVERAGE_WITH_STRIKE);
             BowlerData[] iplBowlersData = new Gson().fromJson(sortedBowlersData, BowlerData[].class);
             Assert.assertEquals("Krishnappa Gowtham", iplBowlersData[0].player);
             Assert.assertEquals("Yusuf Pathan", iplBowlersData[bowlerData.size()-1].player);
@@ -246,10 +244,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersData_whenSortedAccordingToWicketsWithBowlingAverage_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BOWLING,cricketLeagueDataAdapterFactory);
             when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BOWLING,IPL_BOWLER_DATA)).thenReturn(bowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BOWLER_DATA);
-            String sortedBowlersData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_WICKETS_WITH_AVERAGE);
+            cricketLeagueAnalysisForBowling.loadIPLData(IPL_BOWLER_DATA);
+            String sortedBowlersData = cricketLeagueAnalysisForBowling.getSortedData(CricketLeagueAnalysis.CompareType.BOWLER_WICKETS_WITH_AVERAGE);
             BowlerData[] bowlersData = new Gson().fromJson(sortedBowlersData, BowlerData[].class);
             Assert.assertEquals("Imran Tahir", bowlersData[0].player);
             Assert.assertEquals("Yusuf Pathan", bowlersData[bowlerData.size()-1].player);
@@ -259,9 +256,9 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanAndBowlerData_shouldReturnTotalNumberOfRecords() {
         try{
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,cricketLeagueDataAdapterFactory);
-            when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,IPL_BATSMAN_DATA,IPL_BOWLER_DATA)).thenReturn(batsmanAndBowlerData);
-            int numOfRecords = cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
+            when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,
+                                                 IPL_BATSMAN_DATA,IPL_BOWLER_DATA)).thenReturn(batsmanAndBowlerData);
+            int numOfRecords = cricketLeagueAnalysisForBattingAndBowling.loadIPLData(IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
             Assert.assertEquals(5,numOfRecords);
         } catch (CricketLeagueAnalysisException e) {}
     }
@@ -269,10 +266,10 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersAndBatsmanData_whenSortedAccordingToBattingAndBowlingAverage_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,cricketLeagueDataAdapterFactory);
-            when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,IPL_BATSMAN_DATA,IPL_BOWLER_DATA)).thenReturn(batsmanAndBowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
-            String sortedCricketLeagueData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE_WITH_BOWLER_AVERAGE);
+            when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,
+                                                 IPL_BATSMAN_DATA,IPL_BOWLER_DATA)).thenReturn(batsmanAndBowlerData);
+            cricketLeagueAnalysisForBattingAndBowling.loadIPLData(IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
+            String sortedCricketLeagueData = cricketLeagueAnalysisForBattingAndBowling.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE_WITH_BOWLER_AVERAGE);
             BatsmanAndBowlerData[] cricketLeagueData = new Gson().fromJson(sortedCricketLeagueData, BatsmanAndBowlerData[].class);
             Assert.assertEquals("MS Dhoni", cricketLeagueData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -281,10 +278,10 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBowlersAndBatsmanData_whenSortedAccordingToRunsAndWickets_shouldReturnSortedResults() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,cricketLeagueDataAdapterFactory);
-            when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,IPL_BATSMAN_DATA,IPL_BOWLER_DATA)).thenReturn(batsmanAndBowlerData);
-            cricketLeagueAnalysis.loadIPLData(IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
-            String sortedCricketLeagueData = cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.RUNS_WITH_WICKETS);
+            when(cricketLeagueDataAdapterFactory.getCricketLeagueData(CricketLeagueAnalysis.Cricket.BATTING_BOWLING,
+                                                 IPL_BATSMAN_DATA,IPL_BOWLER_DATA)).thenReturn(batsmanAndBowlerData);
+            cricketLeagueAnalysisForBattingAndBowling.loadIPLData(IPL_BATSMAN_DATA,IPL_BOWLER_DATA);
+            String sortedCricketLeagueData = cricketLeagueAnalysisForBattingAndBowling.getSortedData(CricketLeagueAnalysis.CompareType.RUNS_WITH_WICKETS);
             BatsmanAndBowlerData[] cricketLeagueData = new Gson().fromJson(sortedCricketLeagueData, BatsmanAndBowlerData[].class);
             Assert.assertEquals("David Warner ", cricketLeagueData[0].player);
         } catch (CricketLeagueAnalysisException e) {}
@@ -293,8 +290,7 @@ public class CricketLeagueAnalysisTest {
     @Test
     public void givenBatsmanData_WhenDataNotLoaded_ShouldThrowException() {
         try {
-            CricketLeagueAnalysis cricketLeagueAnalysis = new CricketLeagueAnalysis(CricketLeagueAnalysis.Cricket.BATTING,cricketLeagueDataAdapterFactory);
-            cricketLeagueAnalysis.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE);
+            cricketLeagueAnalysisForBatting.getSortedData(CricketLeagueAnalysis.CompareType.BATSMAN_AVERAGE);
         } catch (CricketLeagueAnalysisException e) {
             Assert.assertEquals(CricketLeagueAnalysisException.ExceptionType.NO_DATA,e.type);
         }

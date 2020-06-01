@@ -18,9 +18,13 @@ public class CricketLeagueAnalysis {
     private Cricket cricket;
     private CricketLeagueDataAdapterFactory cricketLeagueDataAdapterFactory;
 
-    public CricketLeagueAnalysis(Cricket cricket, CricketLeagueDataAdapterFactory cricketLeagueDataAdapterFactory) {
+    public CricketLeagueAnalysis(Cricket cricket) {
         this.cricket = cricket;
-        this.cricketLeagueDataAdapterFactory = cricketLeagueDataAdapterFactory;
+        cricketLeagueDataAdapterFactory = new CricketLeagueDataAdapterFactory();
+    }
+
+    protected void setCricket(Cricket cricket) {
+        this.cricket = cricket;
     }
 
     public int loadIPLData(String... csvFilePath) throws CricketLeagueAnalysisException {
